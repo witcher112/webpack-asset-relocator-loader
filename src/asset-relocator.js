@@ -335,7 +335,7 @@ module.exports = async function (content, map) {
   };
   const emitAssetDirectory = (wildcardPath, wildcards) => {
     const wildcardIndex = wildcardPath.indexOf(WILDCARD);
-    const dirIndex = wildcardIndex === -1 ? wildcardPath.length : wildcardPath.lastIndexOf(path.sep, wildcardPath.substr(0, wildcardIndex));
+    const dirIndex = wildcardIndex === -1 ? wildcardPath.length : wildcardPath.lastIndexOf(path.sep, wildcardIndex);
     const assetDirPath = wildcardPath.substr(0, dirIndex);
     const wildcardPattern = wildcardPath.substr(dirIndex).replace(wildcardRegEx, '**/*') || '/**/*';
     if (options.debugLog)
@@ -1034,7 +1034,7 @@ module.exports = async function (content, map) {
         return;
       // do not emit asset directories higher than the node_modules base if a package
       if (pkgBase) {
-        const nodeModulesBase = id.substr(0, id.lastIndexOf('node_modules')) + 'node_modules' + path.sep;
+        const nodeModulesBase = id.substr(0, id.indexOf(path.sep + 'node_modules')) + path.sep + 'node_modules' + path.sep;
         if (!assetPath.startsWith(nodeModulesBase)) {
           if (options.debugLog) {
             if (assetEmission(assetPath))
@@ -1056,7 +1056,7 @@ module.exports = async function (content, map) {
     function assetEmission (assetPath) {
       // verify the asset file / directory exists
       const wildcardIndex = assetPath.indexOf(WILDCARD);
-      const dirIndex = wildcardIndex === -1 ? assetPath.length : assetPath.lastIndexOf(path.sep, assetPath.substr(0, wildcardIndex));
+      const dirIndex = wildcardIndex === -1 ? assetPath.length : assetPath.lastIndexOf(path.sep, wildcardIndex);
       const basePath = assetPath.substr(0, dirIndex);
       try {
         const stats = statSync(basePath);
