@@ -9,6 +9,7 @@ const bindings = require('bindings');
 const getUniqueAssetName = require('./utils/dedupe-names');
 const sharedlibEmit = require('./utils/sharedlib-emit');
 const glob = require('glob');
+const getNodeModulesBase = require('./utils/get-node-modules-base');
 const getPackageBase = require('./utils/get-package-base');
 const getPackageScope = require('./utils/get-package-scope');
 const { pregyp, nbind } = require('./utils/binary-locators');
@@ -360,7 +361,7 @@ module.exports = async function (content, map) {
 
   if (id.endsWith('.node')) {
     const assetState = getAssetState(options, this._compilation);
-    const pkgBase = getPackageBase(this.resourcePath) || dir;
+    const pkgBase = (options.outputLibraryPackageNameDir ? getNodeModulesBase(this.resourcePath) : getPackageBase(this.resourcePath)) || dir;
     await sharedlibEmit(pkgBase, assetState, assetBase(options.outputAssetBase), this.emitFile);
 
     let name;
@@ -395,7 +396,7 @@ module.exports = async function (content, map) {
   const entryIds = assetState.entryIds;
 
   // calculate the base-level package folder to load bindings from
-  const pkgBase = getPackageBase(id);
+  const pkgBase = options.outputLibraryPackageNameDir ? getNodeModulesBase(id) : getPackageBase(id);
 
   const emitAsset = (assetPath) => {
     // JS assets to support require(assetPath) and not fs-based handling

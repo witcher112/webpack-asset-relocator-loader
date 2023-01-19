@@ -34,6 +34,8 @@ Any `.node` files included will also support binary relocation.
         use: {
           loader: '@vercel/webpack-asset-relocator-loader',
           options: {
+            // optional, emit library into directory with package name
+            outputLibraryPackageNameDir: true,
             // optional, base folder for asset emission (eg assets/name.ext)
             outputAssetBase: 'assets',
             // optional, restrict asset emissions to only the given folder.
